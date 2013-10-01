@@ -1,5 +1,5 @@
 require 'digest'
-
+require 'lib/ldap' #?
 =begin rdoc
 
 A user.
@@ -84,7 +84,14 @@ class User < ActiveRecord::Base
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u = User.find_by_login(login) # need to get the salt
-    
+    if not u
+      user_data = Ldap.authenticate(login, password)
+      u = User.new(:login => user_data.cn,
+                   :email => user_data.mail,
+                   :name => user_data.displayName,
+                   :password => password,
+                   :password_confirmation => password) if user_data
+    end
     if u.try(:authenticated?, password)
       # for forwards compatibility
       u.instance_eval{store_md5_password(password)} 
@@ -104,7 +111,8 @@ class User < ActiveRecord::Base
   end
 
   def authenticated?(password)
-    crypted_password == encrypt(password)
+    Ldap.authenticated?(self.login, password)
+    #crypted_password == encrypt(password)
   end
 
   def remember_token?

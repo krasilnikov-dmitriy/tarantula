@@ -1,0 +1,17 @@
+development:
+  host: localhost
+  port: 3389
+  base: ou=people,dc=test,dc=com
+  ssl: false
+
+test:
+  host: localhost
+  port: 3389
+  base: ou=people,dc=test,dc=com
+  ssl: false
+
+production:
+  host: localhost
+  port: 3389
+  base: ou=people,dc=test,dc=com
+  ssl: false
