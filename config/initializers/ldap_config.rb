@@ -1,1 +1,1 @@
-Tarantula::Application.config.ldap = YAML::load(IO.read("#{Rails.root}/config/ldap.yml"))[Rails.env]
+Tarantula::Application.config.ldap = YAML::load(IO.read("#{Rails.root}/config/ldap.yml"))[Rails.env].symbolize_keys!
